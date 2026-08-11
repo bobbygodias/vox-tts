@@ -16,7 +16,7 @@ build/
 *.egg-info/
 
 # Models, references and generated audio
-models/
+/models/
 weights/
 checkpoints/
 voice-references/

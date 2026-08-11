@@ -6,7 +6,7 @@ VOX é uma plataforma aberta, local e desacoplada de modelos para síntese de vo
 
 ## Estado
 
-**v0.2.0-dev — planejamento seguro do primeiro backend.**
+**v0.3.0-dev — integridade verificável do primeiro modelo.**
 
 O repositório já contém:
 
@@ -16,6 +16,7 @@ O repositório já contém:
 - carregamento e validação dos quatro perfis vocais;
 - testes unitários e CI em Python 3.12 e 3.13.
 - planejamento auditável do F5 pt-BR, sem executar ou baixar modelos.
+- manifesto fixado e verificação SHA-256 dos artefatos externos.
 
 Ainda não há síntese real: nenhum peso é baixado e nenhum termo de modelo é aceito automaticamente.
 
@@ -30,6 +31,7 @@ vox doctor
 vox backends
 vox profiles
 vox f5-plan --help
+vox model-verify --help
 ```
 
 Sem instalar o pacote:
@@ -81,6 +83,7 @@ O código criado especificamente para o VOX é licenciado sob Apache-2.0. Isso *
 
 Consulte [`docs/MODEL_LICENSES.md`](docs/MODEL_LICENSES.md) antes de baixar, executar ou distribuir qualquer modelo.
 O contrato do primeiro adaptador está em [`docs/F5_BACKEND.md`](docs/F5_BACKEND.md).
+O processo de pesos está em [`docs/MODEL_ACQUISITION.md`](docs/MODEL_ACQUISITION.md).
 
 ## Segurança e privacidade
 
