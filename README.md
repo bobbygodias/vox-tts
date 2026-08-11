@@ -6,7 +6,7 @@ VOX é uma plataforma aberta, local e desacoplada de modelos para síntese de vo
 
 ## Estado
 
-**v0.1.0 — núcleo executável inicial.**
+**v0.2.0-dev — planejamento seguro do primeiro backend.**
 
 O repositório já contém:
 
@@ -15,6 +15,7 @@ O repositório já contém:
 - diagnóstico local sem download automático de modelos;
 - carregamento e validação dos quatro perfis vocais;
 - testes unitários e CI em Python 3.12 e 3.13.
+- planejamento auditável do F5 pt-BR, sem executar ou baixar modelos.
 
 Ainda não há síntese real: nenhum peso é baixado e nenhum termo de modelo é aceito automaticamente.
 
@@ -28,6 +29,7 @@ pip install -e .
 vox doctor
 vox backends
 vox profiles
+vox f5-plan --help
 ```
 
 Sem instalar o pacote:
@@ -78,6 +80,7 @@ O código criado especificamente para o VOX é licenciado sob Apache-2.0. Isso *
 - `firstpixel/F5-TTS-pt-br`: pesos CC BY-NC 4.0.
 
 Consulte [`docs/MODEL_LICENSES.md`](docs/MODEL_LICENSES.md) antes de baixar, executar ou distribuir qualquer modelo.
+O contrato do primeiro adaptador está em [`docs/F5_BACKEND.md`](docs/F5_BACKEND.md).
 
 ## Segurança e privacidade
 
@@ -89,4 +92,3 @@ Consulte [`docs/MODEL_LICENSES.md`](docs/MODEL_LICENSES.md) antes de baixar, exe
 ## Origem
 
 Projeto concebido por Bobby Dias e Andrew Vox como infraestrutura aberta para TTS brasileiro, preservando liberdade técnica, consentimento vocal e reprodutibilidade.
-
