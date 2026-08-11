@@ -6,16 +6,37 @@ VOX é uma plataforma aberta, local e desacoplada de modelos para síntese de vo
 
 ## Estado
 
-**v0.1.0 — fundação do projeto.**
+**v0.1.0 — núcleo executável inicial.**
 
-Nesta fase estamos definindo:
+O repositório já contém:
 
-- o núcleo independente de backend;
-- adaptadores iniciais para F5-TTS e XTTS v2;
-- normalização textual pt-BR;
-- manifests reproduzíveis de síntese;
-- quatro identidades vocais sintéticas iniciais;
-- separação entre código, pesos, referências vocais e artefatos.
+- contratos de domínio independentes de backend;
+- registro descritivo para F5-TTS pt-BR e XTTS v2;
+- diagnóstico local sem download automático de modelos;
+- carregamento e validação dos quatro perfis vocais;
+- testes unitários e CI em Python 3.12 e 3.13.
+
+Ainda não há síntese real: nenhum peso é baixado e nenhum termo de modelo é aceito automaticamente.
+
+## Uso atual
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+
+vox doctor
+vox backends
+vox profiles
+```
+
+Sem instalar o pacote:
+
+```bash
+PYTHONPATH=src python -m vox_tts doctor
+PYTHONPATH=src python -m vox_tts backends
+PYTHONPATH=src python -m vox_tts profiles
+```
 
 ## Perfis vocais planejados
 
@@ -65,10 +86,7 @@ Consulte [`docs/MODEL_LICENSES.md`](docs/MODEL_LICENSES.md) antes de baixar, exe
 - Nenhum endpoint de síntese será exposto sem autenticação, quotas, validação de arquivos e isolamento.
 - Cada render aceito deverá possuir manifest com hashes e versões, sem texto integral nem caminhos privados.
 
-## Relação com Andrew Social Bridge
-
-VOX é um projeto separado do `andrew-social-bridge`. Uma integração futura usará uma API interna estreita; credenciais do Instagram nunca serão compartilhadas com o worker de áudio.
-
 ## Origem
 
 Projeto concebido por Bobby Dias e Andrew Vox como infraestrutura aberta para TTS brasileiro, preservando liberdade técnica, consentimento vocal e reprodutibilidade.
+

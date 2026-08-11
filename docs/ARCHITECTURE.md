@@ -26,7 +26,7 @@ Executa jobs de síntese em processo isolado. Carrega um backend por vez, preser
 
 ### StateStore
 
-Interface inspirada no Andrew Social Bridge. A implementação PostgreSQL/Neon guardará perfis, jobs, versões, hashes, licenças e auditoria. Desenvolvimento local poderá usar filesystem.
+Interface substituível para perfis, jobs, versões, hashes, licenças e auditoria. A implementação inicial poderá usar filesystem; a persistência compartilhada usará PostgreSQL/Neon.
 
 ### ArtifactStore
 
@@ -42,7 +42,7 @@ cliente -> VOX Core -> StateStore -> fila -> worker -> backend
 
 ## Fronteiras de segurança
 
-- O worker nunca recebe credenciais do Instagram.
 - Referências vocais não entram no Git, Neon, telemetria ou mensagens de erro.
 - Um serviço remoto deverá exigir autenticação, quotas, limites de tamanho, validação de mídia e isolamento.
-- O VOX e o Andrew Social Bridge permanecem repositórios e serviços independentes.
+- Integrações futuras usarão APIs estreitas e credenciais segregadas.
+
