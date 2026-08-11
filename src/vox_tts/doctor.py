@@ -6,6 +6,7 @@ import shutil
 import sys
 from pathlib import Path
 
+from . import __version__
 from .backends import backend_health
 
 
@@ -32,7 +33,7 @@ def doctor_report(path: Path | None = None) -> dict[str, object]:
     recommended_device = "cuda" if torch.get("cuda_available") else "cpu"
     health = [item.as_dict() for item in backend_health()]
     return {
-        "vox_version": "0.1.0",
+        "vox_version": __version__,
         "python": platform.python_version(),
         "python_supported": sys.version_info >= (3, 12),
         "platform": platform.platform(),
@@ -44,4 +45,3 @@ def doctor_report(path: Path | None = None) -> dict[str, object]:
         "backends": health,
         "ready_for_live_synthesis": any(item["ready"] for item in health),
     }
-

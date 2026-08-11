@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Sequence
 
 from .backends import backend_descriptors
+from .backends.f5_ptbr import F5PlanError, create_f5_plan
 from .doctor import doctor_report
 from .profiles import ProfileCatalogError, load_catalog
 
@@ -20,6 +21,20 @@ def _parser() -> argparse.ArgumentParser:
     profiles.add_argument("--directory", type=Path, default=Path("profiles"))
 
     subparsers.add_parser("backends", help="list registered backend descriptors")
+
+    f5_plan = subparsers.add_parser(
+        "f5-plan", help="validate and redact a planned F5 pt-BR synthesis without running it"
+    )
+    f5_plan.add_argument("--text-file", type=Path, required=True)
+    f5_plan.add_argument("--reference", type=Path, required=True)
+    f5_plan.add_argument("--reference-text-file", type=Path, required=True)
+    f5_plan.add_argument("--checkpoint", type=Path, required=True)
+    f5_plan.add_argument("--vocab", type=Path, required=True)
+    f5_plan.add_argument("--model-name", required=True)
+    f5_plan.add_argument("--output", type=Path, required=True)
+    f5_plan.add_argument("--device", choices=("cpu", "cuda", "mps"), default="cpu")
+    f5_plan.add_argument("--confirm-voice-rights", action="store_true")
+    f5_plan.add_argument("--confirm-noncommercial-use", action="store_true")
     return parser
 
 
@@ -44,6 +59,24 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 2
         _emit([profile.as_dict() for profile in profiles])
         return 0
+    if args.command == "f5-plan":
+        try:
+            plan = create_f5_plan(
+                text_file=args.text_file,
+                reference_audio=args.reference,
+                reference_text_file=args.reference_text_file,
+                checkpoint=args.checkpoint,
+                vocab=args.vocab,
+                model_name=args.model_name,
+                output=args.output,
+                device=args.device,
+                confirm_voice_rights=args.confirm_voice_rights,
+                confirm_noncommercial_use=args.confirm_noncommercial_use,
+            )
+        except (F5PlanError, OSError) as exc:
+            _emit({"error": str(exc)})
+            return 2
+        _emit(plan.as_dict())
+        return 0 if plan.ready_to_execute else 3
 
     raise AssertionError(f"unhandled command: {args.command}")
-
