@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "id": "vox-br-senior-01",
+  "display_name": "VOX Sênior 01",
+  "locale": "pt-BR",
+  "status": "design",
+  "origin_policy": "synthetic-or-explicitly-authorized",
+  "target": {
+    "age_impression": "aproximadamente 65 anos",
+    "pitch": "médio",
+    "texture": "maduro com respiração natural",
+    "pace": "ponderado",
+    "use_case": "história, reflexão e autoridade serena"
+  },
+  "source_constraints": {
+    "public_availability_is_not_consent": true,
+    "private_references_in_git": false,
+    "private_references_in_database": false
+  },
+  "backend_bindings": []
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "id": "vox-br-neutral-01",
+  "display_name": "VOX Neutro 01",
+  "locale": "pt-BR",
+  "status": "design",
+  "origin_policy": "synthetic-or-explicitly-authorized",
+  "target": {
+    "age_impression": "adulto",
+    "pitch": "médio",
+    "texture": "equilibrado e claro",
+    "pace": "moderado",
+    "use_case": "narração geral e documentários"
+  },
+  "source_constraints": {
+    "public_availability_is_not_consent": true,
+    "private_references_in_git": false,
+    "private_references_in_database": false
+  },
+  "backend_bindings": []
+}

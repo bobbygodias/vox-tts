@@ -1,0 +1,38 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Models, references and generated audio
+models/
+weights/
+checkpoints/
+voice-references/
+private/
+artifacts/
+outputs/
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+*.wav
+*.mp3
+*.flac
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "id": "vox-br-young-01",
+  "display_name": "VOX Jovem 01",
+  "locale": "pt-BR",
+  "status": "design",
+  "origin_policy": "synthetic-or-explicitly-authorized",
+  "target": {
+    "age_impression": "adulto jovem",
+    "pitch": "médio-alto",
+    "texture": "luminoso e natural",
+    "pace": "ágil",
+    "use_case": "conteúdo jovem e explicações curtas"
+  },
+  "source_constraints": {
+    "public_availability_is_not_consent": true,
+    "private_references_in_git": false,
+    "private_references_in_database": false
+  },
+  "backend_bindings": []
+}
