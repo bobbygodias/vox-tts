@@ -33,12 +33,21 @@ O comando retorna `0` apenas quando nome, tamanho e SHA-256 dos dois arquivos
 coincidem. Retorna `3` para arquivos ausentes ou divergentes e `2` para manifesto
 ou diretório inválido. O relatório não revela o caminho absoluto do diretório.
 
-## Limite de licença e arquitetura
+## Licença do modelo e política do motor
 
-Os pesos são CC BY-NC 4.0. O download e o uso devem ser deliberados e compatíveis
-com finalidade não comercial. O manifesto registra `F5TTS_Base` apenas como
-candidato de arquitetura, pois a combinação precisa ser confirmada por um teste
-curto no runtime real antes de qualquer narração longa.
+Os pesos selecionados atualmente são CC BY-NC 4.0. O download e o uso desses
+pesos específicos devem ser deliberados e compatíveis com a licença deles.
+
+Essa restrição pertence ao modelo, não ao motor VOX. O manifesto registra o campo
+`noncommercial` como metadado obrigatório e booleano, mas o validador aceita
+`true` ou `false`. Assim, backends futuros com licenças permissivas, comerciais ou
+outras políticas compatíveis podem ser descritos sem alterar a arquitetura do
+motor. Cada modelo continua responsável por declarar de forma explícita sua
+licença e sua URL de referência.
+
+O manifesto registra `F5TTS_Base` apenas como candidato de arquitetura, pois a
+combinação precisa ser confirmada por um teste curto no runtime real antes de
+qualquer narração longa.
 
 O runtime foi fixado em `f5-tts==1.1.22`, publicação ligada ao commit
 `9c614e9657089213efc6a7421b30630be138a3f5`. O manifesto também registra o
