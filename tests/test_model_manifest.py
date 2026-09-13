@@ -72,6 +72,26 @@ class ModelManifestTests(unittest.TestCase):
         self.assertEqual(len(manifest.artifacts), 2)
         self.assertTrue(all(len(item.sha256) == 64 for item in manifest.artifacts))
 
+    def test_manifest_accepts_commercial_or_permissive_license_metadata(self) -> None:
+        payload = _manifest_payload(b"checkpoint", b"vocabulary")
+        payload["license"] = {
+            "spdx": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0",
+            "noncommercial": False,
+        }
+
+        manifest = ModelManifest.from_mapping(payload)
+
+        self.assertEqual(manifest.model_license, "Apache-2.0")
+        self.assertFalse(manifest.noncommercial)
+
+    def test_manifest_rejects_non_boolean_noncommercial_flag(self) -> None:
+        payload = _manifest_payload(b"checkpoint", b"vocabulary")
+        payload["license"]["noncommercial"] = "false"
+
+        with self.assertRaisesRegex(ModelManifestError, "must be a boolean"):
+            ModelManifest.from_mapping(payload)
+
     def test_verification_accepts_exact_files(self) -> None:
         checkpoint = b"checkpoint"
         vocab = b"vocabulary"
