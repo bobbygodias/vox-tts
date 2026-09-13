@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "id": "firstpixel-f5-tts-pt-br",
+  "backend_id": "f5-ptbr",
+  "model_id": "firstpixel/F5-TTS-pt-br",
+  "license": {
+    "spdx": "CC-BY-NC-4.0",
+    "url": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "noncommercial": true
+  },
+  "runtime": {
+    "package": "f5-tts",
+    "version": "1.1.22",
+    "source_commit": "9c614e9657089213efc6a7421b30630be138a3f5",
+    "distribution": {
+      "filename": "f5_tts-1.1.22-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/26/be/5febd38994dd9ea5bfa9167d91f68cba01bdd1b710c62a89c25309c18a6c/f5_tts-1.1.22-py3-none-any.whl",
+      "sha256": "f0505dfb5463645caa526bace346ed1c89bcc9acb9ef42fdffd56c2c4c0a09d1"
+    }
+  },
+  "architecture": {
+    "candidate": "F5TTS_Base",
+    "status": "requires-runtime-smoke-test"
+  },
+  "artifacts": [
+    {
+      "role": "checkpoint",
+      "filename": "model_last.safetensors",
+      "source_url": "https://huggingface.co/firstpixel/F5-TTS-pt-br/resolve/5ebc6913f2d92e4c0cb5396a9867aa1c0c1c4281/pt-br/model_last.safetensors",
+      "source_revision": "5ebc6913f2d92e4c0cb5396a9867aa1c0c1c4281",
+      "size_bytes": 1348431976,
+      "sha256": "c25e2678bdd4304071e3d0e39a283a7d23ffbc23678080c5b0b741dda2e07f0f"
+    },
+    {
+      "role": "vocabulary",
+      "filename": "vocab.txt",
+      "source_url": "https://huggingface.co/SWivid/F5-TTS/resolve/84e5a410d9cead4de2f847e7c9369a6440bdfaca/F5TTS_Base/vocab.txt",
+      "source_revision": "84e5a410d9cead4de2f847e7c9369a6440bdfaca",
+      "size_bytes": 13800,
+      "sha256": "2a05f992e00af9b0bd3800a8d23e78d520dbd705284ed2eedb5f4bd29398fa3c"
+    }
+  ]
+}

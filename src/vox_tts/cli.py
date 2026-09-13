@@ -8,6 +8,7 @@ from typing import Sequence
 from .backends import backend_descriptors
 from .backends.f5_ptbr import F5PlanError, create_f5_plan
 from .doctor import doctor_report
+from .model_manifest import ModelManifestError, load_model_manifest, verify_model_directory
 from .profiles import ProfileCatalogError, load_catalog
 
 
@@ -35,6 +36,12 @@ def _parser() -> argparse.ArgumentParser:
     f5_plan.add_argument("--device", choices=("cpu", "cuda", "mps"), default="cpu")
     f5_plan.add_argument("--confirm-voice-rights", action="store_true")
     f5_plan.add_argument("--confirm-noncommercial-use", action="store_true")
+
+    model_verify = subparsers.add_parser(
+        "model-verify", help="verify local model files against a pinned manifest"
+    )
+    model_verify.add_argument("--manifest", type=Path, required=True)
+    model_verify.add_argument("--directory", type=Path, required=True)
     return parser
 
 
@@ -78,5 +85,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 2
         _emit(plan.as_dict())
         return 0 if plan.ready_to_execute else 3
+    if args.command == "model-verify":
+        try:
+            manifest = load_model_manifest(args.manifest)
+            report = verify_model_directory(manifest, args.directory)
+        except (ModelManifestError, OSError) as exc:
+            _emit({"error": str(exc)})
+            return 2
+        _emit(report)
+        return 0 if report["ready_for_runtime_smoke_test"] else 3
 
     raise AssertionError(f"unhandled command: {args.command}")
