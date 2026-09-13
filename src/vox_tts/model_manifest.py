@@ -121,8 +121,8 @@ class ModelManifest:
             raise ModelManifestError("artifact roles must be unique")
 
         noncommercial = license_data.get("noncommercial")
-        if noncommercial is not True:
-            raise ModelManifestError("the initial external model manifest must be noncommercial")
+        if not isinstance(noncommercial, bool):
+            raise ModelManifestError("license noncommercial must be a boolean")
 
         model_license_url = _required_string(license_data, "url")
         if not model_license_url.startswith("https://"):
