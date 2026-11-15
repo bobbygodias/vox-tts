@@ -44,7 +44,7 @@ def _manifest_payload(checkpoint: bytes, vocab: bytes) -> dict[str, object]:
             {
                 "role": "checkpoint",
                 "filename": "model.safetensors",
-                "source_url": "https://huggingface.co/example/test/resolve/rev/model.safetensors",
+                "source_url": "https://huggingface.co/example/test/resolve/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/model.safetensors",
                 "source_revision": "b" * 40,
                 "size_bytes": len(checkpoint),
                 "sha256": hashlib.sha256(checkpoint).hexdigest(),
@@ -52,7 +52,7 @@ def _manifest_payload(checkpoint: bytes, vocab: bytes) -> dict[str, object]:
             {
                 "role": "vocabulary",
                 "filename": "vocab.txt",
-                "source_url": "https://huggingface.co/example/test/resolve/rev/vocab.txt",
+                "source_url": "https://huggingface.co/example/test/resolve/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/vocab.txt",
                 "source_revision": "b" * 40,
                 "size_bytes": len(vocab),
                 "sha256": hashlib.sha256(vocab).hexdigest(),
@@ -125,6 +125,33 @@ class ModelManifestTests(unittest.TestCase):
     def test_manifest_rejects_path_traversal(self) -> None:
         payload = _manifest_payload(b"checkpoint", b"vocabulary")
         payload["artifacts"][0]["filename"] = "../model.safetensors"
+        with self.assertRaisesRegex(ModelManifestError, "safe basename"):
+            ModelManifest.from_mapping(payload)
+
+    def test_manifest_rejects_mutable_or_mismatched_source_urls(self) -> None:
+        for source_url in (
+            "https://huggingface.co/example/test/resolve/main/model.safetensors",
+            "https://huggingface.co/example/test/resolve/" + "a" * 40 + "/model.safetensors",
+            "https://huggingface.co.evil.example/example/test/resolve/" + "b" * 40 + "/model.safetensors",
+            "https://user:pass@huggingface.co/example/test/resolve/" + "b" * 40 + "/model.safetensors",
+            "https://huggingface.co/example/test/resolve/" + "b" * 40 + "/model.safetensors#different",
+        ):
+            with self.subTest(source_url=source_url):
+                payload = _manifest_payload(b"checkpoint", b"vocabulary")
+                payload["artifacts"][0]["source_url"] = source_url
+                with self.assertRaisesRegex(ModelManifestError, "source_url must resolve"):
+                    ModelManifest.from_mapping(payload)
+
+    def test_manifest_rejects_windows_style_path_traversal(self) -> None:
+        for filename in (r"..\\model.safetensors", r"C:\\model.safetensors", "model:stream", ".", ".."):
+            with self.subTest(filename=filename):
+                payload = _manifest_payload(b"checkpoint", b"vocabulary")
+                payload["artifacts"][0]["filename"] = filename
+                with self.assertRaisesRegex(ModelManifestError, "safe basename"):
+                    ModelManifest.from_mapping(payload)
+
+        payload = _manifest_payload(b"checkpoint", b"vocabulary")
+        payload["runtime"]["distribution"]["filename"] = r"..\\fake.whl"
         with self.assertRaisesRegex(ModelManifestError, "safe basename"):
             ModelManifest.from_mapping(payload)
 

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 from typing import Any, Mapping
+from urllib.parse import urlsplit
 
 
 _SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
@@ -44,7 +45,12 @@ class ModelArtifact:
     def from_mapping(cls, data: Mapping[str, Any]) -> "ModelArtifact":
         filename = _required_string(data, "filename")
         candidate = Path(filename)
-        if candidate.is_absolute() or candidate.name != filename or ".." in candidate.parts:
+        if (
+            candidate.is_absolute()
+            or candidate.name != filename
+            or filename in {".", ".."}
+            or any(char in filename for char in ("/", "\\", ":", "\x00"))
+        ):
             raise ModelManifestError("artifact filename must be a safe basename")
 
         size_bytes = data.get("size_bytes")
@@ -55,12 +61,26 @@ class ModelArtifact:
         if _SHA256_PATTERN.fullmatch(checksum) is None:
             raise ModelManifestError("artifact sha256 must contain 64 hexadecimal characters")
 
-        source_url = _required_string(data, "source_url")
-        if not source_url.startswith("https://huggingface.co/"):
-            raise ModelManifestError("artifact source_url must use HTTPS on huggingface.co")
         source_revision = _required_string(data, "source_revision").lower()
         if _REVISION_PATTERN.fullmatch(source_revision) is None:
             raise ModelManifestError("artifact source_revision must be a full 40-character commit")
+        source_url = _required_string(data, "source_url")
+        parsed_url = urlsplit(source_url)
+        segments = parsed_url.path.split("/")
+        if (
+            parsed_url.scheme != "https"
+            or parsed_url.netloc != "huggingface.co"
+            or parsed_url.query
+            or parsed_url.fragment
+            or len(segments) < 6
+            or not all(segments[1:3])
+            or segments[3] != "resolve"
+            or segments[4] != source_revision
+            or not all(segments[5:])
+        ):
+            raise ModelManifestError(
+                "artifact source_url must resolve to source_revision on huggingface.co"
+            )
 
         return cls(
             role=_required_string(data, "role"),
@@ -134,7 +154,11 @@ class ModelManifest:
         if not isinstance(distribution, Mapping):
             raise ModelManifestError("runtime distribution must be an object")
         distribution_filename = _required_string(distribution, "filename")
-        if Path(distribution_filename).name != distribution_filename:
+        if (
+            Path(distribution_filename).name != distribution_filename
+            or distribution_filename in {".", ".."}
+            or any(char in distribution_filename for char in ("/", "\\", ":", "\x00"))
+        ):
             raise ModelManifestError("runtime distribution filename must be a safe basename")
         distribution_url = _required_string(distribution, "url")
         if not distribution_url.startswith("https://files.pythonhosted.org/"):

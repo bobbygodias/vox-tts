@@ -14,7 +14,7 @@ mantém três checkpoints. O VOX seleciona somente:
 | `model_last.safetensors` | `firstpixel/F5-TTS-pt-br` | 1.348.431.976 bytes |
 | `vocab.txt` | `SWivid/F5-TTS/F5TTS_Base` | 13.800 bytes |
 
-O manifesto fixa revisões e SHA-256 para impedir troca silenciosa de conteúdo.
+O manifesto fixa revisões e SHA-256 para impedir troca silenciosa de conteúdo.\nA validação exige que cada URL de artefato aponte diretamente para o commit\n`source_revision` declarado (`/resolve/<commit>/...`), sem branches mutáveis,\nfragmentos ou credenciais embutidas. A validação do manifesto não baixa pesos\ne não substitui a verificação local do SHA-256.
 O checkpoint `.safetensors` foi preferido aos arquivos `.pt`, que dependem de
 desserialização Pickle e ocupam cerca de 5,39 GB cada.
 
