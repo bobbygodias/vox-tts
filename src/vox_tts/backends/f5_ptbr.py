@@ -178,6 +178,8 @@ def create_f5_plan(
         raise F5PlanError("output must use the .wav suffix")
     if not output_path.parent.is_dir():
         raise F5PlanError(f"output directory does not exist: {output_path.parent}")
+    if output_path == reference_path:
+        raise F5PlanError("output must not overwrite the reference audio")
 
     normalized_text = original_text.lower()
     normalized_reference_text = reference_text.lower()
