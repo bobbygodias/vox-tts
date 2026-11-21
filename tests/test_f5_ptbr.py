@@ -64,6 +64,32 @@ class F5PlanTests(unittest.TestCase):
             self.assertIn("olá, mundo 2!", plan.argv)
             self.assertIn("Generation text contains digits", " ".join(plan.warnings))
 
+    def test_output_cannot_overwrite_reference_audio(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paths = self._fixture(Path(temporary))
+            paths["output"] = paths["reference_audio"]
+            with self.assertRaisesRegex(F5PlanError, "overwrite the reference audio"):
+                create_f5_plan(
+                    model_name="F5TTS_Base",
+                    confirm_voice_rights=True,
+                    confirm_noncommercial_use=True,
+                    **paths,
+                )
+
+    def test_output_symlink_alias_cannot_overwrite_reference_audio(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            paths = self._fixture(Path(temporary))
+            alias = Path(temporary) / "alias.wav"
+            alias.symlink_to(paths["reference_audio"])
+            paths["output"] = alias
+            with self.assertRaisesRegex(F5PlanError, "overwrite the reference audio"):
+                create_f5_plan(
+                    model_name="F5TTS_Base",
+                    confirm_voice_rights=True,
+                    confirm_noncommercial_use=True,
+                    **paths,
+                )
+
     @patch("vox_tts.backends.f5_ptbr.shutil.which", return_value=None)
     def test_missing_runtime_is_a_blocker_not_a_download(self, _which: object) -> None:
         with tempfile.TemporaryDirectory() as temporary:
